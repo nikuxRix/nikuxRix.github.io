@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎰 パチンコスロット</title>
+<title>パチンコスロット</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#FFD700;--red:#FF2244;--blue:#00CFFF;--green:#00FF88;--dark:#0a0a0f;}
@@ -99,8 +99,8 @@ body.chance .spin-btn{background:linear-gradient(135deg,#FF8C00,#CC6600,#FFB300)
 <body>
 <div class="bg"></div>
 <div id="flash"></div>
-<div id="pikaText">⚡ PIKA!!</div>
-<div id="banner">🔥 CHANCE TIME !! 高確率モード突入 🔥</div>
+<div id="pikaText">PIKA!!</div>
+<div id="banner">CHANCE TIME !! 高確率モード突入</div>
 <div class="machine">
   <div class="title"><h1>PACHISLOT</h1><div class="sub">LUCKY CHANCE</div></div>
   <div class="info-bar">
@@ -123,7 +123,7 @@ body.chance .spin-btn{background:linear-gradient(135deg,#FF8C00,#CC6600,#FFB300)
     </div>
   </div>
   <div class="controls">
-    <div class="message" id="msg"><span id="msgTxt">🎰 スロットを回そう！</span></div>
+    <div class="message" id="msg"><span id="msgTxt">スロットを回そう!!</span></div>
     <div class="bet-row">
       <button class="bet-btn" onclick="changeBet(-10)">−10</button>
       <button class="bet-btn" onclick="changeBet(-5)">−5</button>
@@ -226,12 +226,12 @@ function endChanceTime(){
   fl.style.background='rgba(0,150,255,0.6)';
   fl.className='';void fl.offsetWidth;fl.className='go';
   setTimeout(function(){fl.style.background='white';},800);
-  setTimeout(function(){setMsg('😢 チャンスタイム終了…','');},100);
+  setTimeout(function(){setMsg('チャンスタイム終了…','');},100);
 }
 
 function spin(){
   if(gamePhase!=='idle')return;
-  if(credit<bet){setMsg('💸 クレジットが足りない！','');return;}
+  if(credit<bet){setMsg('クレジットが足りないぞ','');return;}
   credit-=bet;
   document.getElementById('lastWin').textContent=0;
   document.getElementById('winLine').className='win-line';
@@ -272,7 +272,7 @@ function spin(){
   gamePhase='waitStop';
 
   if(chanceActive){setMsg('🔥 CHANCE TIME 残り'+chanceLeft+'G！STOPで止めろ！','chance');}
-  else{setMsg('🎰 STOPボタンで止めろ！','');}
+  else{setMsg('STOPボタンで止めろ！','');}
 
   if(willFlash){
     setTimeout(function(){
@@ -349,10 +349,10 @@ function judge(){
     const e=res.map(function(r){return r.emoji;});
     if(e[0]===e[1]||e[1]===e[2]||e[0]===e[2]){
       const ref=Math.floor(bet*0.3);credit+=ref;
-      setMsg('😅 あと一歩… ＋'+ref+'コイン返還','');
+      setMsg('あと一歩… ＋'+ref+'コイン返還','');
     } else {
       if(chanceActive)setMsg('🔥 CHANCE TIME 残り'+(chanceLeft-1)+'G！','chance');
-      else setMsg('😔 残念…もう一度！','');
+      else setMsg('残念…もう一度！','');
     }
   }
   if(chanceActive){chanceLeft--;if(chanceLeft<=0)endChanceTime();else upd();}
@@ -366,13 +366,13 @@ function judge(){
   }
   if(credit<=0){
     setTimeout(function(){
-      setMsg('💀 ゲームオーバー！リセット中…','');
+      setMsg('ゲームオーバー！リセット中…','');
       setTimeout(function(){
         credit=1000;bet=10;chanceActive=false;chanceLeft=0;
         document.body.classList.remove('chance');
         document.getElementById('chanceBox').classList.remove('on');
         document.getElementById('banner').classList.remove('on');
-        upd();setMsg('🎰 スロットを回そう！','');
+        upd();setMsg('スロットを回そう！','');
       },2000);
     },800);
   }
