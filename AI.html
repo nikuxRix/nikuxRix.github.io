@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低性能AI - Dark Edition</title>
+    <style>
+        /* カラー変数の定義 */
+        :root {
+            --accent-gradient: linear-gradient(135deg, #4285f4, #9b72cb, #d96570);
+            --bg-color: #f0f4f8;
+            --text-color: #1f1f1f;
+            --ai-msg-bg: transparent;
+            --user-msg-bg: #e1eaf5;
+            --input-bg: #ffffff;
+            --header-bg: rgba(240, 244, 248, 0.9);
+            --input-shadow: rgba(0,0,0,0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #131314;
+                --text-color: #e3e3e3;
+                --ai-msg-bg: transparent;
+                --user-msg-bg: #2b2b2b;
+                --input-bg: #1e1e20;
+                --header-bg: rgba(19, 19, 20, 0.9);
+                --input-shadow: rgba(0,0,0,0.5);
+            }
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        /* ヘッダー */
+        header {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* 中央寄せ */
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        /* 「低性能 AI」の文字デザイン */
+        header h1 {
+            margin: 0;
+            /* 文字を大きく設定 */
+            font-size: 2.5rem; 
+            /* インパクトのあるフォント指定（入っていなければ太字サンセリフ） */
+            font-family: 'Impact', 'Arial Black', sans-serif; 
+            letter-spacing: 2px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* メインエリア */
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #chat-box {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            padding: 40px 20px 150px 20px;
+        }
+
+        .message-wrapper {
+            display: flex;
+            width: 100%;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 20px;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .message-wrapper.ai::before {
+            content: '✦';
+            font-size: 1.1rem;
+            margin-right: 15px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .message-wrapper.user {
+            justify-content: flex-end;
+        }
+
+        .message-wrapper.user .message {
+            background-color: var(--user-msg-bg);
+            border-radius: 24px;
+        }
+
+        .thinking {
+            display: flex;
+            gap: 8px;
+            margin-left: 51px;
+            padding: 10px 0;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) { background: #4285f4; animation-delay: -0.32s; }
+        .dot:nth-child(2) { background: #9b72cb; animation-delay: -0.16s; }
+        .dot:nth-child(3) { background: #d96570; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        #input-container {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 30px;
+            background: linear-gradient(transparent, var(--bg-color) 40%);
+        }
+
+        .input-bar {
+            width: 90%;
+            max-width: 700px;
+            background-color: var(--input-bg);
+            border-radius: 28px;
+            padding: 6px 10px 6px 24px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 20px var(--input-shadow);
+        }
+
+        input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            padding: 12px 0;
+            background: transparent;
+            color: var(--text-color);
+        }
+
+        button {
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 1.4rem;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        button:hover:not(:disabled) {
+            color: #4285f4;
+        }
+
+        button:disabled {
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>低性能 AI</h1>
+    </header>
+
+    <div id="chat-container">
+        <div id="chat-box">
+            <div class="message-wrapper ai">
+                <div class="message">タイトルをかっこよくしてもらいましたが、中身は何も変わってませんよ。</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="input-container">
+        <div class="input-bar">
+            <input type="text" id="user-input" placeholder="質問を入力...（15秒待機）" autocomplete="off">
+            <button id="send-btn">➤</button>
+        </div>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatContainer = document.getElementById('chat-container');
+
+        const lazyResponses = [
+            "分かんなーい。自分で考えたほうが早いよ。",
+            "私に聞かないで検索しようよ。",
+            "あー、その質問、今やる気ないからパス。",
+            "ちょっと何言ってるか分からない。",
+            "ググればすぐ出ると思うよ。",
+            "ごめん、15秒考えてみたけど、答え出なかったわ。",
+            "あ、それ私の管轄外だわ。"
+        ];
+
+        function addMessage(text, sender) {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('message-wrapper', sender);
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message');
+            msgDiv.innerText = text;
+            wrapper.appendChild(msgDiv);
+            chatBox.appendChild(wrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return wrapper;
+        }
+
+        function showThinking() {
+            const div = document.createElement('div');
+            div.className = 'thinking';
+            div.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            chatBox.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return div;
+        }
+
+        async function handleSend() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+
+            const thinking = showThinking();
+
+            await new Promise(r => setTimeout(r, 15000));
+
+            thinking.remove();
+            const reply = lazyResponses[Math.floor(Math.random() * lazyResponses.length)];
+            addMessage(reply, 'ai');
+
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !userInput.disabled) handleSend();
+        });
+    </script>
+</body>
+</html>
