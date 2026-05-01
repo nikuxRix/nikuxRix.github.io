@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>低性能AI - Dark Edition</title>
+    <title>超低性能AI</title>
     <style>
         /* カラー変数の定義 */
         :root {
@@ -40,24 +40,22 @@
             overflow: hidden;
             transition: background-color 0.3s ease;
         }
-
-        /* ヘッダー */
-        header {
+        header {   
             padding: 24px;
             display: flex;
             align-items: center;
-            justify-content: center; /* 中央寄せ */
+            justify-content: center; 
             background-color: var(--header-bg);
             backdrop-filter: blur(10px);
             z-index: 10;
         }
 
-        /* 「低性能 AI」の文字デザイン */
+        
         header h1 {
             margin: 0;
-            /* 文字を大きく設定 */
-            font-size: 2.5rem; 
-            /* インパクトのあるフォント指定（入っていなければ太字サンセリフ） */
+            
+            font-size: 2.3rem; 
+            
             font-family: 'Impact', 'Arial Black', sans-serif; 
             letter-spacing: 2px;
             background: var(--accent-gradient);
@@ -103,7 +101,7 @@
         }
 
         .message-wrapper.ai::before {
-            content: '✦';
+            content: '😄';
             font-size: 1.1rem;
             margin-right: 15px;
             width: 36px;
@@ -201,20 +199,20 @@
 <body>
 
     <header>
-        <h1>低性能 AI</h1>
+        <h1>超低性能 AI</h1>
     </header>
 
     <div id="chat-container">
         <div id="chat-box">
             <div class="message-wrapper ai">
-                <div class="message">タイトルをかっこよくしてもらいましたが、中身は何も変わってませんよ。</div>
+                <div class="message">こんにちは〜〜</div>
             </div>
         </div>
     </div>
 
     <div id="input-container">
         <div class="input-bar">
-            <input type="text" id="user-input" placeholder="質問を入力...（15秒待機）" autocomplete="off">
+            <input type="text" id="user-input" placeholder="質問を入力" autocomplete="off">
             <button id="send-btn">➤</button>
         </div>
     </div>
@@ -228,11 +226,11 @@
         const lazyResponses = [
             "分かんなーい。自分で考えたほうが早いよ。",
             "私に聞かないで検索しようよ。",
-            "あー、その質問、今やる気ないからパス。",
+            "今やる気ないから",
             "ちょっと何言ってるか分からない。",
             "ググればすぐ出ると思うよ。",
             "ごめん、15秒考えてみたけど、答え出なかったわ。",
-            "あ、それ私の管轄外だわ。"
+            "あ、私頭良くないから分かんないぞ。"
         ];
 
         function addMessage(text, sender) {
