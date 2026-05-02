@@ -201,13 +201,13 @@
 
     
     const responses = {
-        programming: "プログラミングを知りたいのですかー。素敵ですね！具体的にどの言語や、どのようなものを作ってみたいか決まっていますか？",
-        greeting: "こんにちは。私はkinnnikuAiと言います。分からない事を聞かせて下さい",
+        programming: "プログラミングを知りたいのですかー。素敵ですね！具体的にどの言語や、どのようなものを作ってみたいか決まってる〜",
+        greeting: "こんにちは。私はkinnnikuAiと言います。分からない事が聞きたいです〜",
         kinnniku: "kinnnikuAiでーす!!どうしましたか〜",
         toha: "検索できませんでした",
         nani: "データセンターにアクセスできません。",
-        osiete: 
-        
+        osiete: "本物のkinnnikuに聞こう!!"
+        hima: "あらら..暇なのね〜 暇なら勉強しようね"
         default: [
             "その点について詳しくお聞かせいただけますか？",
             "承知いたしました。お手伝いできることがあれば教えてください。",
@@ -272,7 +272,7 @@
             reply = responses.nani;
             } else if (inputVal.includes("教えて")) {
             reply = responses.osiete;
-            } else if (inputVal.includes("ひま")) || inputVal.includes("暇")) {
+            } else if (inputVal.includes("ひま") || inputVal.includes("暇")) {
             reply = responses.hima;
             } else if (inputVal.includes("こんにちは")) {
             reply = responses.greeting;
