@@ -192,22 +192,16 @@
         </button>
     </div>
 </div>
-
-<script>
-    const messageList = document.getElementById('message-list');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
-    const chatContainer = document.getElementById('chat-container');
-
     
-    const responses = {
+<>
+ const responses = {
         programming: "プログラミングを知りたいのですかー。素敵ですね！具体的にどの言語や、どのようなものを作ってみたいか決まってる〜",
         greeting: "こんにちは。私はkinnnikuAiと言います。分からない事が聞きたいです〜",
         kinnniku: "kinnnikuAiでーす!!どうしましたか〜",
         toha: "検索できませんでした",
         nani: "データセンターにアクセスできません。",
-        osiete: "本物のkinnnikuに聞こう!!"
-        hima: "あらら..暇なのね〜 暇なら勉強しようね"
+        osiete: "本物のkinnnikuに聞こう!!", 
+        hima: "あらら..暇なのね〜 暇なら勉強しようね", 
         default: [
             "その点について詳しくお聞かせいただけますか？",
             "承知いたしました。お手伝いできることがあれば教えてください。",
@@ -215,99 +209,48 @@
         ]
     };
 
-    function appendMessage(type) {
-        const row = document.createElement('div');
-        row.className = `row ${type}`;
-        if (type === 'ai') {
-            row.innerHTML = `<div class="icon">✦</div><div class="content"></div>`;
-        } else {
-            row.innerHTML = `<div class="content"></div>`;
-        }
-        messageList.appendChild(row);
-        return row.querySelector('.content');
-    }
-
-    async function streamResponse(element, text) {
-        const cursor = document.createElement('span');
-        cursor.className = 'typing-cursor';
-        element.appendChild(cursor);
-
-        for (let i = 0; i < text.length; i++) {
-            cursor.before(text[i]);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            await new Promise(r => setTimeout(r, Math.random() * 25 + 15));
-        }
-        cursor.remove();
-    }
 
     async function processSend() {
         const inputVal = userInput.value.trim();
         if (!inputVal || sendBtn.disabled) return;
 
-        // UIをロック
         userInput.value = '';
         userInput.disabled = true;
         sendBtn.disabled = true;
 
-        // ユーザーの発言
         const userBubble = appendMessage('user');
         userBubble.innerText = inputVal;
         chatContainer.scrollTop = chatContainer.scrollHeight;
 
-        
         await new Promise(r => setTimeout(r, 800));
         
         const aiBubble = appendMessage('ai');
         let reply = "";
 
+        // 条件分岐の整理
         if (inputVal.includes("プログラミング")) {
             reply = responses.programming;
-            } else if (inputVal.includes("こんにちは")) {
+        } else if (inputVal.includes("こんにちは")) {
             reply = responses.greeting;
-            } else if (inputVal.includes("kinnniku")) {
+        } else if (inputVal.includes("kinnniku")) {
             reply = responses.kinnniku;
-            } else if (inputVal.includes("とは")) {
+        } else if (inputVal.includes("とは")) {
             reply = responses.toha;
-            } else if (inputVal.includes("なに")) {
+        } else if (inputVal.includes("なに")) {
             reply = responses.nani;
-            } else if (inputVal.includes("教えて")) {
+        } else if (inputVal.includes("教えて")) {
             reply = responses.osiete;
-            } else if (inputVal.includes("ひま") || inputVal.includes("暇")) {
+        } else if (inputVal.includes("ひま") || inputVal.includes("暇")) {
             reply = responses.hima;
-            } else if (inputVal.includes("こんにちは")) {
-            reply = responses.greeting;
-            } else if (inputVal.includes("こんにちは")) {
-            reply = responses.greeting;
-            } else if (inputVal.includes("こんにちは")) {
-            reply = responses.greeting;
-            } else if (inputVal.includes("こんにちは")) {
-            reply = responses.greeting;
-            } else if (inputVal.includes("こんにちは")) {
-            reply = responses.greeting;
-            } else if (inputVal.includes("こんにちは")) {
-            reply = responses.greeting;
-            } else if (inputVal.includes("こんにちは")) {
-            reply = responses.greeting;
-            } else if (inputVal.includes("こんにちは")) {
-            reply = responses.greeting;
         } else {
+            // どれにも当てはまらない場合
             const def = responses.default;
             reply = def[Math.floor(Math.random() * def.length)];
         }
 
         await streamResponse(aiBubble, reply);
 
-        // ロック解除
         userInput.disabled = false;
         sendBtn.disabled = false;
         userInput.focus();
     }
-
-    sendBtn.addEventListener('click', processSend);
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') processSend();
-    });
-</script>
-
-</body>
-  </html>
