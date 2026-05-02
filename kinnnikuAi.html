@@ -199,10 +199,15 @@
     const sendBtn = document.getElementById('send-btn');
     const chatContainer = document.getElementById('chat-container');
 
-    // AIの性格設定
+    
     const responses = {
         programming: "プログラミングを知りたいのですかー。素敵ですね！具体的にどの言語や、どのようなものを作ってみたいか決まっていますか？",
-        greeting: "こんにちは。あなたの専属アシスタントとして、どのような情報をお調べしましょうか？",
+        greeting: "こんにちは。私はkinnnikuAiと言います。分からない事を聞かせて下さい",
+        kinnniku: "kinnnikuAiでーす!!どうしましたか〜",
+        toha: "検索できませんでした",
+        nani: "データセンターにアクセスできません。",
+        osiete: 
+        
         default: [
             "その点について詳しくお聞かせいただけますか？",
             "承知いたしました。お手伝いできることがあれば教えてください。",
@@ -249,16 +254,41 @@
         userBubble.innerText = inputVal;
         chatContainer.scrollTop = chatContainer.scrollHeight;
 
-        // 思考時間を演出
+        
         await new Promise(r => setTimeout(r, 800));
-
-        // 回答の判定ロジック
+        
         const aiBubble = appendMessage('ai');
         let reply = "";
 
         if (inputVal.includes("プログラミング")) {
             reply = responses.programming;
-        } else if (inputVal.includes("こんにちは")) {
+            } else if (inputVal.includes("こんにちは")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("kinnniku")) {
+            reply = responses.kinnniku;
+            } else if (inputVal.includes("とは")) {
+            reply = responses.toha;
+            } else if (inputVal.includes("なに")) {
+            reply = responses.nani;
+            } else if (inputVal.includes("教えて")) {
+            reply = responses.osiete;
+            } else if (inputVal.includes("ひま,暇")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("こんにちは")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("こんにちは")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("こんにちは")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("こんにちは")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("こんにちは")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("こんにちは")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("こんにちは")) {
+            reply = responses.greeting;
+            } else if (inputVal.includes("こんにちは")) {
             reply = responses.greeting;
         } else {
             const def = responses.default;
