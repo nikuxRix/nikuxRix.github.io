@@ -139,7 +139,7 @@
         "冗談": "あはは、ユーモアがあって楽しいな！", "本気": "その目、本気だね。応援するよ！", "覚悟": "決めたからには、最後までやり抜こう。",
         "決意": "固い意志を感じるよ、頑張れ！", "期待": "ワクワクして待ってるよ、楽しみだな。", "予感": "いいことが起こりそうな予感がするよ！",
         "直感": "自分の直感を信じて進んでみよう。", "運": "運も味方につけて、突き進もう！", "縁": "不思議な縁で結ばれているんだね。",
-        "初期化": "システムを正常に起動しました。何でも聞いてね！"
+        "紹介": "kinnnikuAiだよ。何でも聞いてね！"
     };
 
     const defaultReplies = [
@@ -195,7 +195,7 @@
 
     document.getElementById('sendBtn').onclick = handleSend;
     document.getElementById('userInput').onkeypress = (e) => { if(e.key === 'Enter') handleSend(); };
-    window.onload = () => streamText(dictionary["初期化"]);
+    window.onload = () => streamText(dictionary["紹介"]);
 </script>
 </body>
   </html>
