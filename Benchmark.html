@@ -1,1 +1,361 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Benchmark</title>
 
+<style>
+body{
+    margin:0;
+    background:#1a1d22;
+    overflow:hidden;
+    font-family:Segoe UI,sans-serif;
+    color:white;
+}
+
+#canvas{
+    width:100vw;
+    height:100vh;
+    display:block;
+    background:#000;
+}
+
+.ui{
+    position:absolute;
+    top:20px;
+    left:20px;
+    background:rgba(0,0,0,0.45);
+    padding:15px 20px;
+    border-radius:12px;
+    backdrop-filter:blur(8px);
+}
+
+.title{
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.score{
+    margin-top:8px;
+    font-size:18px;
+}
+
+button{
+    margin-top:10px;
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    background:#2f80ff;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#5295ff;
+}
+
+.progress{
+    width:260px;
+    height:10px;
+    background:#222;
+    border-radius:999px;
+    overflow:hidden;
+    margin-top:12px;
+}
+
+.bar{
+    width:0%;
+    height:100%;
+    background:#4ea1ff;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="ui">
+    <div class="title">Benchmark</div>
+
+    <div class="score">
+        Single Core:
+        <span id="single">-</span>
+    </div>
+
+    <div class="score">
+        Multi Core:
+        <span id="multi">-</span>
+    </div>
+
+    <button id="startBtn">
+        Start Benchmark
+    </button>
+
+    <div class="progress">
+        <div class="bar" id="bar"></div>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const singleText = document.getElementById("single");
+const multiText = document.getElementById("multi");
+const bar = document.getElementById("bar");
+const startBtn = document.getElementById("startBtn");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const W = canvas.width;
+const H = canvas.height;
+
+
+const renderImage = new Image();
+renderImage.crossOrigin = "anonymous";
+
+renderImage.src =
+"https://raw.githubusercontent.com/nikuxRix/nikuxRix.github.io/main/image/kinnniku.png";
+
+renderImage.onload = () => {
+    drawScene(0);
+};
+
+
+function drawScene(progress=0){
+
+    ctx.clearRect(0,0,W,H);
+
+    const bg = ctx.createLinearGradient(0,0,0,H);
+
+    bg.addColorStop(0,"#1e242d");
+    bg.addColorStop(1,"#0d1116");
+
+    ctx.fillStyle = bg;
+    ctx.fillRect(0,0,W,H);
+
+    if(!renderImage.complete){
+        ctx.fillStyle="white";
+        ctx.font="30px sans-serif";
+        ctx.fillText("Loading Image...",40,60);
+        return;
+    }
+
+    const cols = 22;
+    const rows = 12;
+
+    const tileW = W / cols;
+    const tileH = H / rows;
+
+    const centerX = cols / 2;
+    const centerY = rows / 2;
+
+    const tiles = [];
+
+    for(let y=0;y<rows;y++){
+        for(let x=0;x<cols;x++){
+
+            const dist = Math.hypot(
+                x-centerX,
+                y-centerY
+            );
+
+            tiles.push({
+                x,
+                y,
+                dist
+            });
+        }
+    }
+
+    tiles.sort((a,b)=>a.dist-b.dist);
+
+    const visible =
+    Math.floor(tiles.length * progress);
+
+    ctx.fillStyle="#000";
+    ctx.fillRect(0,0,W,H);
+
+
+    for(let i=0;i<visible;i++){
+
+        const t = tiles[i];
+
+        const sx =
+        t.x * (renderImage.width / cols);
+
+        const sy =
+        t.y * (renderImage.height / rows);
+
+        const sw =
+        renderImage.width / cols;
+
+        const sh =
+        renderImage.height / rows;
+
+        const dx = t.x * tileW;
+        const dy = t.y * tileH;
+
+        ctx.save();
+
+        ctx.filter =
+        progress < 0.35
+        ? "blur(7px)"
+        : progress < 0.7
+        ? "blur(2px)"
+        : "none";
+
+        ctx.drawImage(
+            renderImage,
+            sx,
+            sy,
+            sw,
+            sh,
+            dx,
+            dy,
+            tileW,
+            tileH
+        );
+
+        ctx.restore();
+
+        ctx.strokeStyle =
+        "rgba(255,255,255,0.07)";
+
+        ctx.strokeRect(
+            dx,
+            dy,
+            tileW,
+            tileH
+        );
+    }
+
+
+    for(let i=visible;i<tiles.length;i++){
+
+        const t = tiles[i];
+
+        const dx = t.x * tileW;
+        const dy = t.y * tileH;
+
+        ctx.fillStyle =
+        "rgba(255,255,255,0.03)";
+
+        ctx.fillRect(
+            dx,
+            dy,
+            tileW,
+            tileH
+        );
+
+        ctx.strokeStyle =
+        "rgba(255,255,255,0.04)";
+
+        ctx.strokeRect(
+            dx,
+            dy,
+            tileW,
+            tileH
+        );
+    }
+
+    // 上UI
+    ctx.fillStyle =
+    "rgba(0,0,0,0.45)";
+
+    ctx.fillRect(
+        25,
+        H-90,
+        420,
+        52
+    );
+
+    ctx.fillStyle = "white";
+    ctx.font = "26px sans-serif";
+
+    ctx.fillText(
+        "Performing Render Test...",
+        40,
+        H-55
+    );
+}
+
+async function startBenchmark(){
+
+    startBtn.disabled = true;
+
+    singleText.textContent = "-";
+    multiText.textContent = "-";
+
+    const duration = 15000;
+
+    const start = performance.now();
+
+    let operations = 0;
+
+    while(performance.now()-start < duration){
+
+        const arr =
+        new Uint8Array(1024*1024*4);
+
+        for(let i=0;i<arr.length;i++){
+            arr[i] =
+            (arr[i] + i*13)%255;
+        }
+
+        operations += arr.length;
+
+        const elapsed =
+        performance.now()-start;
+
+        const progress =
+        elapsed/duration;
+
+        drawScene(progress);
+
+        bar.style.width =
+        `${progress*100}%`;
+
+        await new Promise(r=>
+            setTimeout(r,0)
+        );
+    }
+
+    const totalTime =
+    (performance.now()-start)/1000;
+
+    const cores =
+    navigator.hardwareConcurrency || 2;
+
+    const multi =
+    Math.round(
+        (operations/totalTime)/3500
+    );
+
+    const single =
+    Math.round(
+        multi / Math.max(1,cores*0.75)
+    );
+
+    singleText.textContent =
+    single.toLocaleString();
+
+    multiText.textContent =
+    multi.toLocaleString();
+
+    startBtn.disabled = false;
+}
+
+startBtn.onclick = startBenchmark;
+
+drawScene(0);
+
+</script>
+
+</body>
+  </html>
