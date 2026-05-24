@@ -1,361 +1,336 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Benchmark</title>
-
 <style>
-body{
-    margin:0;
-    background:#1a1d22;
-    overflow:hidden;
-    font-family:Segoe UI,sans-serif;
-    color:white;
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#181920;color:#d0cfc8;font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;overflow:hidden}
+.wrap{display:flex;height:100vh;min-height:560px}
 
-#canvas{
-    width:100vw;
-    height:100vh;
-    display:block;
-    background:#000;
-}
+.left{width:260px;min-width:260px;background:#1e1f28;display:flex;flex-direction:column;border-right:1px solid #2a2b36;overflow-y:auto}
 
-.ui{
-    position:absolute;
-    top:20px;
-    left:20px;
-    background:rgba(0,0,0,0.45);
-    padding:15px 20px;
-    border-radius:12px;
-    backdrop-filter:blur(8px);
-}
+.brand{padding:16px;border-bottom:1px solid #2a2b36;display:flex;align-items:center;gap:10px}
+.brand-icon{width:38px;height:38px;background:#4a6cf7;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-icon svg{width:22px;height:22px;fill:#fff}
+.brand-name{font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px}
+.brand-ver{font-size:10px;color:#555;letter-spacing:1px;margin-top:1px}
 
-.title{
-    font-size:28px;
-    font-weight:bold;
-    margin-bottom:10px;
-}
+.panel{padding:14px 16px;border-bottom:1px solid #2a2b36}
+.panel-title{font-size:10px;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
 
-.score{
-    margin-top:8px;
-    font-size:18px;
-}
+.test-row{display:flex;align-items:center;margin-bottom:8px;gap:6px}
+.test-label{font-size:12px;color:#aaa;flex:1}
+.test-score{font-size:18px;font-weight:700;color:#fff;min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
+.test-score.dim{color:#444}
+.test-unit{font-size:10px;color:#555;margin-left:2px;align-self:flex-end;margin-bottom:2px}
+.btn-go{padding:4px 10px;background:#2a3060;border:1px solid #3a4070;color:#7a9af0;font-size:11px;cursor:pointer;border-radius:4px;transition:all .15s;white-space:nowrap}
+.btn-go:hover{background:#3a4070;color:#aabfff}
+.btn-go.active{background:#1a4030;border-color:#2a6050;color:#5adfaf;animation:pulse-btn .8s ease infinite alternate}
+.btn-go:disabled{opacity:.4;cursor:not-allowed}
+@keyframes pulse-btn{from{opacity:.7}to{opacity:1}}
 
-button{
-    margin-top:10px;
-    padding:10px 18px;
-    border:none;
-    border-radius:8px;
-    background:#2f80ff;
-    color:white;
-    cursor:pointer;
-    font-size:16px;
-}
+.divider{border:none;border-top:1px solid #2a2b36;margin:0}
 
-button:hover{
-    background:#5295ff;
-}
+.sys-panel{padding:14px 16px;border-bottom:1px solid #2a2b36}
+.sys-row{display:flex;margin-bottom:5px;gap:8px}
+.sys-key{font-size:11px;color:#555;width:72px;flex-shrink:0}
+.sys-val{font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.progress{
-    width:260px;
-    height:10px;
-    background:#222;
-    border-radius:999px;
-    overflow:hidden;
-    margin-top:12px;
-}
+.score-info{padding:14px 16px;flex:1;overflow-y:auto}
+.score-info .panel-title{margin-bottom:12px}
+.rating-block{margin-bottom:10px;padding:10px 12px;border-radius:6px;background:#13141c;border:1px solid #2a2b36}
+.rating-block.highlight{border-color:#4a6cf7;background:#1a1e35}
+.rb-top{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+.rb-grade{font-size:16px;font-weight:700}
+.rb-range{font-size:11px;color:#555}
+.rb-desc{font-size:11px;color:#777;line-height:1.5}
+.rb-bar{height:3px;border-radius:2px;margin-top:8px;background:#2a2b36}
+.rb-fill{height:100%;border-radius:2px}
 
-.bar{
-    width:0%;
-    height:100%;
-    background:#4ea1ff;
-}
+.right{flex:1;background:#0f0f14;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.canvas-wrap{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000}
+canvas{max-width:100%;max-height:100%;display:block}
+.overlay-label{position:absolute;bottom:12px;right:14px;font-size:10px;color:#ffffff20;letter-spacing:1px;pointer-events:none}
+
+.footer{background:#16171f;border-top:1px solid #2a2b36;padding:7px 16px;display:flex;align-items:center;gap:12px}
+.prog-wrap{flex:1}
+.prog-track{height:4px;background:#252630;border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:#4a6cf7;width:0%;transition:width .08s linear;border-radius:2px}
+.footer-status{font-size:11px;color:#555;min-width:200px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.load-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#555;font-size:12px;text-align:center}
 </style>
-</head>
 
-<body>
-
-<canvas id="canvas"></canvas>
-
-<div class="ui">
-    <div class="title">Benchmark</div>
-
-    <div class="score">
-        Single Core:
-        <span id="single">-</span>
+<div class="wrap">
+  <div class="left">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">ClaudeBench</div>
+        <div class="brand-ver">CPU BENCHMARK R1</div>
+      </div>
     </div>
 
-    <div class="score">
-        Multi Core:
-        <span id="multi">-</span>
+    <div class="panel">
+      <div class="panel-title">Test Results</div>
+      <div class="test-row">
+        <span class="test-label">Multi Core</span>
+        <span class="test-score dim" id="score-multi">—</span>
+        <span class="test-unit">pts</span>
+        <button class="btn-go" id="btn-multi" onclick="runBench('multi')">Run</button>
+      </div>
+      <div class="test-row">
+        <span class="test-label">Single Core</span>
+        <span class="test-score dim" id="score-single">—</span>
+        <span class="test-unit">pts</span>
+        <button class="btn-go" id="btn-single" onclick="runBench('single')">Run</button>
+      </div>
     </div>
 
-    <button id="startBtn">
-        Start Benchmark
-    </button>
+    <hr class="divider">
 
-    <div class="progress">
-        <div class="bar" id="bar"></div>
+    <div class="sys-panel">
+      <div class="panel-title">System</div>
+      <div class="sys-row"><span class="sys-key">CPU</span><span class="sys-val" id="s-cpu">—</span></div>
+      <div class="sys-row"><span class="sys-key">Memory</span><span class="sys-val" id="s-mem">—</span></div>
+      <div class="sys-row"><span class="sys-key">OS</span><span class="sys-val" id="s-os">—</span></div>
     </div>
+
+    <div class="score-info">
+      <div class="panel-title">Score Guide</div>
+      <div class="rating-block" id="rb-s">
+        <div class="rb-top"><span class="rb-grade" style="color:#a78bfa">S</span><span class="rb-range">2000+ pts</span></div>
+        <div class="rb-desc">ハイエンド。最新世代のフラッグシップCPU相当。</div>
+        <div class="rb-bar"><div class="rb-fill" style="width:100%;background:#a78bfa"></div></div>
+      </div>
+      <div class="rating-block" id="rb-a">
+        <div class="rb-top"><span class="rb-grade" style="color:#4a6cf7">A</span><span class="rb-range">1500–1999 pts</span></div>
+        <div class="rb-desc">ハイパフォーマンス。クリエイター向け上位モデル相当。</div>
+        <div class="rb-bar"><div class="rb-fill" style="width:78%;background:#4a6cf7"></div></div>
+      </div>
+      <div class="rating-block" id="rb-b">
+        <div class="rb-top"><span class="rb-grade" style="color:#34d399">B</span><span class="rb-range">1000–1499 pts</span></div>
+        <div class="rb-desc">標準性能。一般的な作業・開発用途に十分なスペック。</div>
+        <div class="rb-bar"><div class="rb-fill" style="width:57%;background:#34d399"></div></div>
+      </div>
+      <div class="rating-block" id="rb-c">
+        <div class="rb-top"><span class="rb-grade" style="color:#fbbf24">C</span><span class="rb-range">600–999 pts</span></div>
+        <div class="rb-desc">エントリークラス。軽作業・Web閲覧には問題ない水準。</div>
+        <div class="rb-bar"><div class="rb-fill" style="width:37%;background:#fbbf24"></div></div>
+      </div>
+      <div class="rating-block" id="rb-d">
+        <div class="rb-top"><span class="rb-grade" style="color:#f87171">D</span><span class="rb-range">〜599 pts</span></div>
+        <div class="rb-desc">低性能。重い処理には向かないローエンドクラス。</div>
+        <div class="rb-bar"><div class="rb-fill" style="width:18%;background:#f87171"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="canvas-wrap">
+      <div class="load-msg" id="load-msg">画像読み込み中...</div>
+      <canvas id="c"></canvas>
+      <div class="overlay-label" id="overlay-label">READY</div>
+    </div>
+    <div class="footer">
+      <div class="prog-wrap">
+        <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+      </div>
+      <div class="footer-status" id="footer-status">Run ボタンを押してテストを開始</div>
+    </div>
+  </div>
 </div>
 
 <script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d',{alpha:false});
+let renderPct=0,animId=null;
+const img=new Image();
+img.crossOrigin='anonymous';
+let imgLoaded=false;
 
-const singleText = document.getElementById("single");
-const multiText = document.getElementById("multi");
-const bar = document.getElementById("bar");
-const startBtn = document.getElementById("startBtn");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-const W = canvas.width;
-const H = canvas.height;
-
-
-const renderImage = new Image();
-renderImage.crossOrigin = "anonymous";
-
-renderImage.src =
-"https://raw.githubusercontent.com/nikuxRix/nikuxRix.github.io/main/image/kinnniku.png";
-
-renderImage.onload = () => {
-    drawScene(0);
+img.onload=()=>{
+  imgLoaded=true;
+  document.getElementById('load-msg').style.display='none';
+  canvas.width=img.width;
+  canvas.height=img.height;
+  drawScene(0);
 };
+img.onerror=()=>{
+  document.getElementById('load-msg').textContent='画像読み込み失敗';
+};
+img.src='https://raw.githubusercontent.com/nikuxRix/nikuxRix.github.io/refs/heads/main/image/kinnniku.png';
 
+function drawScene(pct){
+  if(!imgLoaded)return;
+  const W=canvas.width,H=canvas.height;
+  ctx.fillStyle='#000';
+  ctx.fillRect(0,0,W,H);
 
-function drawScene(progress=0){
+  const cx=W/2,cy=H/2;
+  const maxDim=Math.max(W,H);
+  const size=Math.floor(maxDim*pct);
 
-    ctx.clearRect(0,0,W,H);
+  if(size>0){
+    const x=Math.floor(cx-size/2);
+    const y=Math.floor(cy-size/2);
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x,y,size,size);
+    ctx.clip();
+    ctx.drawImage(img,0,0,W,H);
+    ctx.restore();
 
-    const bg = ctx.createLinearGradient(0,0,0,H);
-
-    bg.addColorStop(0,"#1e242d");
-    bg.addColorStop(1,"#0d1116");
-
-    ctx.fillStyle = bg;
-    ctx.fillRect(0,0,W,H);
-
-    if(!renderImage.complete){
-        ctx.fillStyle="white";
-        ctx.font="30px sans-serif";
-        ctx.fillText("Loading Image...",40,60);
-        return;
+    if(pct<1){
+      ctx.strokeStyle='#4a6cf7';
+      ctx.lineWidth=2;
+      ctx.strokeRect(x,y,size,size);
     }
-
-    const cols = 22;
-    const rows = 12;
-
-    const tileW = W / cols;
-    const tileH = H / rows;
-
-    const centerX = cols / 2;
-    const centerY = rows / 2;
-
-    const tiles = [];
-
-    for(let y=0;y<rows;y++){
-        for(let x=0;x<cols;x++){
-
-            const dist = Math.hypot(
-                x-centerX,
-                y-centerY
-            );
-
-            tiles.push({
-                x,
-                y,
-                dist
-            });
-        }
-    }
-
-    tiles.sort((a,b)=>a.dist-b.dist);
-
-    const visible =
-    Math.floor(tiles.length * progress);
-
-    ctx.fillStyle="#000";
-    ctx.fillRect(0,0,W,H);
-
-
-    for(let i=0;i<visible;i++){
-
-        const t = tiles[i];
-
-        const sx =
-        t.x * (renderImage.width / cols);
-
-        const sy =
-        t.y * (renderImage.height / rows);
-
-        const sw =
-        renderImage.width / cols;
-
-        const sh =
-        renderImage.height / rows;
-
-        const dx = t.x * tileW;
-        const dy = t.y * tileH;
-
-        ctx.save();
-
-        ctx.filter =
-        progress < 0.35
-        ? "blur(7px)"
-        : progress < 0.7
-        ? "blur(2px)"
-        : "none";
-
-        ctx.drawImage(
-            renderImage,
-            sx,
-            sy,
-            sw,
-            sh,
-            dx,
-            dy,
-            tileW,
-            tileH
-        );
-
-        ctx.restore();
-
-        ctx.strokeStyle =
-        "rgba(255,255,255,0.07)";
-
-        ctx.strokeRect(
-            dx,
-            dy,
-            tileW,
-            tileH
-        );
-    }
-
-
-    for(let i=visible;i<tiles.length;i++){
-
-        const t = tiles[i];
-
-        const dx = t.x * tileW;
-        const dy = t.y * tileH;
-
-        ctx.fillStyle =
-        "rgba(255,255,255,0.03)";
-
-        ctx.fillRect(
-            dx,
-            dy,
-            tileW,
-            tileH
-        );
-
-        ctx.strokeStyle =
-        "rgba(255,255,255,0.04)";
-
-        ctx.strokeRect(
-            dx,
-            dy,
-            tileW,
-            tileH
-        );
-    }
-
-    // 上UI
-    ctx.fillStyle =
-    "rgba(0,0,0,0.45)";
-
-    ctx.fillRect(
-        25,
-        H-90,
-        420,
-        52
-    );
-
-    ctx.fillStyle = "white";
-    ctx.font = "26px sans-serif";
-
-    ctx.fillText(
-        "Performing Render Test...",
-        40,
-        H-55
-    );
+  }
 }
 
-async function startBenchmark(){
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-    startBtn.disabled = true;
-
-    singleText.textContent = "-";
-    multiText.textContent = "-";
-
-    const duration = 15000;
-
-    const start = performance.now();
-
-    let operations = 0;
-
-    while(performance.now()-start < duration){
-
-        const arr =
-        new Uint8Array(1024*1024*4);
-
-        for(let i=0;i<arr.length;i++){
-            arr[i] =
-            (arr[i] + i*13)%255;
+function cpuWork(ms,yieldInterval=12){
+  return new Promise(res=>{
+    const end=performance.now()+ms;
+    let ops=0;
+    function tick(){
+      const now=performance.now();
+      if(now>=end){res(ops);return;}
+      const slice=Math.min(yieldInterval,end-now);
+      const s=performance.now();
+      while(performance.now()-s<slice){
+        let x=1.234;
+        for(let i=1;i<3500;i++){
+          x=Math.sqrt(Math.abs(x*i+.618));
+          x=Math.sin(x)*1.5+Math.cos(x*.7);
         }
-
-        operations += arr.length;
-
-        const elapsed =
-        performance.now()-start;
-
-        const progress =
-        elapsed/duration;
-
-        drawScene(progress);
-
-        bar.style.width =
-        `${progress*100}%`;
-
-        await new Promise(r=>
-            setTimeout(r,0)
-        );
+        ops++;
+      }
+      setTimeout(tick,0);
     }
-
-    const totalTime =
-    (performance.now()-start)/1000;
-
-    const cores =
-    navigator.hardwareConcurrency || 2;
-
-    const multi =
-    Math.round(
-        (operations/totalTime)/3500
-    );
-
-    const single =
-    Math.round(
-        multi / Math.max(1,cores*0.75)
-    );
-
-    singleText.textContent =
-    single.toLocaleString();
-
-    multiText.textContent =
-    multi.toLocaleString();
-
-    startBtn.disabled = false;
+    tick();
+  });
 }
 
-startBtn.onclick = startBenchmark;
+function detectSys(){
+  const c=navigator.hardwareConcurrency||4;
+  const mem=navigator.deviceMemory;
+  document.getElementById('s-mem').textContent=mem?mem+' GB':'Unknown';
 
-drawScene(0);
+  const ua=navigator.userAgent,pl=navigator.platform||'';
+  let cpu='Unknown CPU',os='Unknown OS';
+  if(/Mac/.test(pl)){
+    cpu='Apple Silicon / Intel CPU';
+    os='macOS';
+  }else if(/Win/.test(pl)){
+    cpu='x86-64 Processor';
+    os='Windows';
+  }else if(/Linux/.test(pl)){
+    cpu='Linux CPU';
+    os='Linux';
+  }
+  if(/iPhone|iPad/.test(ua)){
+    cpu='Apple A-Series';
+    os='iOS';
+  }else if(/Android/.test(ua)){
+    cpu='ARM Processor';
+    os='Android';
+  }
+  document.getElementById('s-cpu').textContent=cpu+' ('+c+' threads)';
+  document.getElementById('s-os').textContent=os;
+}
 
-</script>
+function highlightGrade(score){
+  const grades=[
+    {id:'rb-s',min:2000},{id:'rb-a',min:1500},
+    {id:'rb-b',min:1000},{id:'rb-c',min:600},{id:'rb-d',min:0}
+  ];
+  document.querySelectorAll('.rating-block').forEach(el=>el.classList.remove('highlight'));
+  for(const g of grades){
+    if(score>=g.min){
+      document.getElementById(g.id).classList.add('highlight');
+      break;
+    }
+  }
+}
 
-</body>
-  </html>
+let running=false;
+let lastDrawnStep=-1;
+
+async function runBench(mode){
+  if(running||!imgLoaded)return;
+  running=true;
+  const cores=navigator.hardwareConcurrency||4;
+  const bmulti=document.getElementById('btn-multi');
+  const bsingle=document.getElementById('btn-single');
+  bmulti.disabled=true;bsingle.disabled=true;
+  const btn=document.getElementById('btn-'+mode);
+  btn.classList.add('active');btn.textContent='…';
+
+  renderPct=0;
+  lastDrawnStep=-1;
+  if(animId)cancelAnimationFrame(animId);
+
+  const dur=72000;
+  const totalSteps=120;
+  const t0=performance.now();
+
+  function loop(){
+    renderPct=Math.min((performance.now()-t0)/dur,1);
+    const step=Math.floor(renderPct*totalSteps);
+    
+    if(step!==lastDrawnStep){
+      drawScene(renderPct);
+      lastDrawnStep=step;
+    }
+    
+    document.getElementById('prog-fill').style.width=(renderPct*100)+'%';
+    const elapsed=Math.floor((performance.now()-t0)/1000);
+    document.getElementById('footer-status').textContent=
+      (mode==='multi'?'Multi Core ('+cores+' threads)':'Single Core')+' — '+elapsed+'s / 72s';
+    document.getElementById('overlay-label').textContent=
+      (renderPct*100).toFixed(1)+'%';
+    if(renderPct<1)animId=requestAnimationFrame(loop);
+    else {
+      drawScene(1);
+      document.getElementById('overlay-label').textContent='DONE';
+    }
+  }
+  animId=requestAnimationFrame(loop);
+
+  const workers=mode==='multi'?cores:1;
+  const yieldInterval=mode==='multi'?Math.max(8,Math.floor(16/cores)):12;
+  
+  const ops=await Promise.all(Array.from({length:workers},()=>cpuWork(dur,yieldInterval)));
+  const total=ops.reduce((a,b)=>a+b,0);
+
+  const opsPerSec=total/(dur/1000);
+  let score;
+  if(mode==='single'){
+    score=Math.round(opsPerSec*0.095);
+  }else{
+    score=Math.round(opsPerSec*0.065);
+  }
+
+  const el=document.getElementById('score-'+mode);
+  el.classList.remove('dim');
+  let v=0;
+  const step=Math.max(1,Math.ceil(score/50));
+  const anim=setInterval(()=>{
+    v=Math.min(v+step,score);
+    el.textContent=v.toLocaleString();
+    if(v>=score){
+      clearInterval(anim);
+      highlightGrade(score);
+    }
+  },25);
+
+  btn.classList.remove('active');btn.textContent='Re-run';
+  bmulti.disabled=false;bsingle.disabled=false;
+  document.getElementById('footer-status').textContent='完了 — スコア: '+score.toLocaleString()+' pts';
+  running=false;
+}
+
+detectSys();
+                                                        </script>
