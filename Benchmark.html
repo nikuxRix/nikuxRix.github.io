@@ -1,15 +1,13 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#181920;color:#d0cfc8;font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;overflow:hidden}
-.wrap{display:flex;height:100vh;min-height:560px}
+body{background:#1e1f28;color:#d0cfc8;font-family:'Segoe UI',system-ui,sans-serif;font-size:12px;overflow:hidden}
+.wrap{display:flex;height:100vh;min-height:560px;align-items:center;justify-content:center;padding:20px}
 
-.left{width:260px;min-width:260px;background:#1e1f28;display:flex;flex-direction:column;border-right:1px solid #2a2b36;overflow-y:auto}
+.main{width:100%;max-width:400px;background:#1e1f28;display:flex;flex-direction:column;border:1px solid #2a2b36;border-radius:8px;overflow:hidden}
 
-.brand{padding:16px;border-bottom:1px solid #2a2b36;display:flex;align-items:center;gap:10px}
-.brand-icon{width:38px;height:38px;background:#4a6cf7;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.brand-icon svg{width:22px;height:22px;fill:#fff}
-.brand-name{font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px}
-.brand-ver{font-size:10px;color:#555;letter-spacing:1px;margin-top:1px}
+.brand{padding:20px;border-bottom:1px solid #2a2b36;text-align:center}
+.brand-name{font-size:18px;font-weight:700;color:#fff;letter-spacing:.5px}
+.brand-ver{font-size:10px;color:#555;letter-spacing:1px;margin-top:4px}
 
 .panel{padding:14px 16px;border-bottom:1px solid #2a2b36}
 .panel-title{font-size:10px;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
@@ -25,6 +23,14 @@ body{background:#181920;color:#d0cfc8;font-family:'Segoe UI',system-ui,sans-seri
 .btn-go:disabled{opacity:.4;cursor:not-allowed}
 @keyframes pulse-btn{from{opacity:.7}to{opacity:1}}
 
+.progress-panel{padding:14px 16px;border-bottom:1px solid #2a2b36;display:none}
+.progress-panel.show{display:block}
+.progress-track{height:6px;background:#252630;border-radius:3px;overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;background:#4a6cf7;width:0%;transition:width .1s linear;border-radius:3px;position:relative}
+.progress-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2));animation:shimmer 1s ease infinite}
+@keyframes shimmer{0%,100%{opacity:0}50%{opacity:1}}
+.progress-text{display:flex;justify-content:space-between;font-size:11px;color:#777}
+
 .divider{border:none;border-top:1px solid #2a2b36;margin:0}
 
 .sys-panel{padding:14px 16px;border-bottom:1px solid #2a2b36}
@@ -32,7 +38,7 @@ body{background:#181920;color:#d0cfc8;font-family:'Segoe UI',system-ui,sans-seri
 .sys-key{font-size:11px;color:#555;width:72px;flex-shrink:0}
 .sys-val{font-size:11px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.score-info{padding:14px 16px;flex:1;overflow-y:auto}
+.score-info{padding:14px 16px;max-height:280px;overflow-y:auto}
 .score-info .panel-title{margin-bottom:12px}
 .rating-block{margin-bottom:10px;padding:10px 12px;border-radius:6px;background:#13141c;border:1px solid #2a2b36}
 .rating-block.highlight{border-color:#4a6cf7;background:#1a1e35}
@@ -43,30 +49,19 @@ body{background:#181920;color:#d0cfc8;font-family:'Segoe UI',system-ui,sans-seri
 .rb-bar{height:3px;border-radius:2px;margin-top:8px;background:#2a2b36}
 .rb-fill{height:100%;border-radius:2px}
 
-.right{flex:1;background:#0f0f14;display:flex;flex-direction:column;position:relative;overflow:hidden}
-.canvas-wrap{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000}
-canvas{max-width:100%;max-height:100%;display:block}
-.overlay-label{position:absolute;bottom:12px;right:14px;font-size:10px;color:#ffffff20;letter-spacing:1px;pointer-events:none}
+.info-panel{padding:14px 16px;border-top:1px solid #2a2b36;background:#16171f}
+.info-title{font-size:10px;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.info-text{font-size:11px;color:#888;line-height:1.6}
+.info-code{background:#0d0d10;padding:8px;border-radius:4px;margin-top:6px;font-family:monospace;font-size:10px;color:#7a9af0;border:1px solid #1a1a20}
 
-.footer{background:#16171f;border-top:1px solid #2a2b36;padding:7px 16px;display:flex;align-items:center;gap:12px}
-.prog-wrap{flex:1}
-.prog-track{height:4px;background:#252630;border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;background:#4a6cf7;width:0%;transition:width .08s linear;border-radius:2px}
-.footer-status{font-size:11px;color:#555;min-width:200px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-.load-msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#555;font-size:12px;text-align:center}
+.footer{background:#16171f;padding:10px 16px;font-size:11px;color:#555;text-align:center;border-top:1px solid #2a2b36}
 </style>
 
 <div class="wrap">
-  <div class="left">
+  <div class="main">
     <div class="brand">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      </div>
-      <div>
-        <div class="brand-name">Benchmark</div>
-        <div class="brand-ver">CPU Benchmark</div>
-      </div>
+      <div class="brand-name">Benchmark</div>
+      <div class="brand-ver">CPU Benchmark</div>
     </div>
 
     <div class="panel">
@@ -82,6 +77,16 @@ canvas{max-width:100%;max-height:100%;display:block}
         <span class="test-score dim" id="score-single">—</span>
         <span class="test-unit">pts</span>
         <button class="btn-go" id="btn-single" onclick="runBench('single')">Run</button>
+      </div>
+    </div>
+
+    <div class="progress-panel" id="progress-panel">
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-text">
+        <span id="progress-label">実行中...</span>
+        <span id="progress-pct">0%</span>
       </div>
     </div>
 
@@ -122,74 +127,13 @@ canvas{max-width:100%;max-height:100%;display:block}
         <div class="rb-bar"><div class="rb-fill" style="width:18%;background:#f87171"></div></div>
       </div>
     </div>
-  </div>
 
-  <div class="right">
-    <div class="canvas-wrap">
-      <div class="load-msg" id="load-msg">画像読み込み中...</div>
-      <canvas id="c"></canvas>
-      <div class="overlay-label" id="overlay-label">READY</div>
-    </div>
-    <div class="footer">
-      <div class="prog-wrap">
-        <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
-      </div>
-      <div class="footer-status" id="footer-status">Run ボタンを押してテストを開始</div>
-    </div>
+
+    <div class="footer" id="footer-status">Run ボタンを押してテストを開始</div>
   </div>
 </div>
 
 <script>
-const canvas=document.getElementById('c');
-const ctx=canvas.getContext('2d',{alpha:false});
-let renderPct=0,animId=null;
-const img=new Image();
-img.crossOrigin='anonymous';
-let imgLoaded=false;
-
-img.onload=()=>{
-  imgLoaded=true;
-  document.getElementById('load-msg').style.display='none';
-  canvas.width=img.width;
-  canvas.height=img.height;
-  drawScene(0);
-};
-img.onerror=()=>{
-  document.getElementById('load-msg').textContent='画像読み込み失敗';
-};
-img.src='https://raw.githubusercontent.com/nikuxRix/nikuxRix.github.io/refs/heads/main/image/kinnniku.png';
-
-function drawScene(pct){
-  if(!imgLoaded)return;
-  const W=canvas.width,H=canvas.height;
-  ctx.fillStyle='#000';
-  ctx.fillRect(0,0,W,H);
-
-  const cx=W/2,cy=H/2;
-  const maxDim=Math.max(W,H);
-  const size=Math.floor(maxDim*pct);
-
-  if(size>0){
-    const x=Math.floor(cx-size/2);
-    const y=Math.floor(cy-size/2);
-    
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(x,y,size,size);
-    ctx.clip();
-    ctx.drawImage(img,0,0,W,H);
-    ctx.restore();
-
-    if(pct<1){
-      ctx.strokeStyle='#4a6cf7';
-      ctx.lineWidth=2;
-      ctx.strokeRect(x,y,size,size);
-    }
-  }
-}
-
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-
 function cpuWork(ms,yieldInterval=12){
   return new Promise(res=>{
     const end=performance.now()+ms;
@@ -256,10 +200,10 @@ function highlightGrade(score){
 }
 
 let running=false;
-let lastDrawnStep=-1;
+let progressInterval=null;
 
 async function runBench(mode){
-  if(running||!imgLoaded)return;
+  if(running)return;
   running=true;
   const cores=navigator.hardwareConcurrency||4;
   const bmulti=document.getElementById('btn-multi');
@@ -268,42 +212,35 @@ async function runBench(mode){
   const btn=document.getElementById('btn-'+mode);
   btn.classList.add('active');btn.textContent='…';
 
-  renderPct=0;
-  lastDrawnStep=-1;
-  if(animId)cancelAnimationFrame(animId);
+  const progressPanel=document.getElementById('progress-panel');
+  progressPanel.classList.add('show');
+  document.getElementById('progress-fill').style.width='0%';
+
+  if(progressInterval)clearInterval(progressInterval);
 
   const dur=72000;
-  const totalSteps=120;
   const t0=performance.now();
 
-  function loop(){
-    renderPct=Math.min((performance.now()-t0)/dur,1);
-    const step=Math.floor(renderPct*totalSteps);
-    
-    if(step!==lastDrawnStep){
-      drawScene(renderPct);
-      lastDrawnStep=step;
-    }
-    
-    document.getElementById('prog-fill').style.width=(renderPct*100)+'%';
-    const elapsed=Math.floor((performance.now()-t0)/1000);
-    document.getElementById('footer-status').textContent=
-      (mode==='multi'?'Multi Core ('+cores+' threads)':'Single Core')+' — '+elapsed+'s / 72s';
-    document.getElementById('overlay-label').textContent=
-      (renderPct*100).toFixed(1)+'%';
-    if(renderPct<1)animId=requestAnimationFrame(loop);
-    else {
-      drawScene(1);
-      document.getElementById('overlay-label').textContent='DONE';
-    }
-  }
-  animId=requestAnimationFrame(loop);
+  progressInterval=setInterval(()=>{
+    const elapsed=performance.now()-t0;
+    const pct=Math.min((elapsed/dur)*100,100);
+    document.getElementById('progress-fill').style.width=pct+'%';
+    document.getElementById('progress-pct').textContent=Math.floor(pct)+'%';
+    const sec=Math.floor(elapsed/1000);
+    document.getElementById('progress-label').textContent=
+      (mode==='multi'?'Multi Core ('+cores+' threads)':'Single Core')+' — '+sec+'s / 72s';
+    document.getElementById('footer-status').textContent='実行中...';
+  },100);
 
   const workers=mode==='multi'?cores:1;
   const yieldInterval=mode==='multi'?Math.max(8,Math.floor(16/cores)):12;
   
   const ops=await Promise.all(Array.from({length:workers},()=>cpuWork(dur,yieldInterval)));
   const total=ops.reduce((a,b)=>a+b,0);
+
+  clearInterval(progressInterval);
+  document.getElementById('progress-fill').style.width='100%';
+  document.getElementById('progress-pct').textContent='100%';
 
   const opsPerSec=total/(dur/1000);
   let score;
@@ -326,6 +263,10 @@ async function runBench(mode){
     }
   },25);
 
+  setTimeout(()=>{
+    progressPanel.classList.remove('show');
+  },1500);
+
   btn.classList.remove('active');btn.textContent='Re-run';
   bmulti.disabled=false;bsingle.disabled=false;
   document.getElementById('footer-status').textContent='完了 — スコア: '+score.toLocaleString()+' pts';
@@ -333,4 +274,4 @@ async function runBench(mode){
 }
 
 detectSys();
-                                                        </script>
+                             </script>
