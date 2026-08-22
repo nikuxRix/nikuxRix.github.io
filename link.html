@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kinnnikuのリンク集</title>
+    <style>
+          :root {
+            --bg-color: #f9fafa;
+            --text-main: #111827;
+            --text-muted: #4b5563;
+            --card-bg: #ffffff;
+            --card-border: #e5e7eb;
+            --card-hover: #f3f4f6;
+            --transition: 0.2s ease-in-out;
+          }
+
+          @media (prefers-color-scheme: dark) {
+            :root {
+              --bg-color: #111827;
+              --text-main: #f9fafb;
+              --text-muted: #9ca3af;
+              --card-bg: #1f2937;
+              --card-border: #374151;
+              --card-hover: #4b5563;
+            }
+            .icon-invert {
+              filter: brightness(0) invert(1);
+            }
+          }
+
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 5rem 1.5rem;
+          }
+
+          .profile-container {
+            width: 100%;
+            max-width: 420px;
+          }
+
+          .profile-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+          }
+
+          .profile-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 16px;
+            object-fit: cover;
+            background-color: var(--card-border);
+            margin-bottom: 1rem;
+          }
+
+          .profile-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+          }
+
+          .profile-bio {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+          }
+
+          .profile-footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding: 1.5rem;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+          }
+
+          .links-nav {
+            width: 100%;
+          }
+
+          .links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+          }
+
+          .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            text-decoration: none;
+            position: relative;
+            transition: background-color var(--transition), border-color var(--transition);
+          }
+
+          .link-card:hover {
+            background-color: var(--card-hover);
+            border-color: var(--text-muted);
+          }
+
+          .link-icon {
+            position: absolute;
+            left: 1.25rem;
+            display: flex;
+            align-items: center;
+          }
+
+          .link-icon img {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            object-fit: cover;
+            display: block;
+          }
+
+          .link-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .link-title {
+            font-weight: 500;
+            line-height: 1.2;
+          }
+
+          .link-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+          }
+    </style>
+  </head>
+  <body>
+    <main class="profile-container">
+      <header class="profile-header">
+        <img src="https://github.com/nikuxrix.png" alt="プロフィールアイコン" class="profile-avatar" />
+        <h1 class="profile-name">nikuxrix</h1>
+        <p class="profile-bio">SNSのリンクをまとめたページです。</p>
+      </header>
+
+      <nav class="links-nav">
+        <ul class="links-list">
+          <li class="link-item">
+            <a href="https://x.com/nikuxRix" target="_blank" rel="noopener noreferrer" class="link-card">
+              <span class="link-icon"><img src="https://cdn.simpleicons.org/x" alt="X" class="icon-invert" /></span>
+              <div class="link-text">
+                <span class="link-title">X (Twitter)</span>
+                <span class="link-desc">
+                  あんまツイートしません
+                  <br />
+                  見る専です
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="link-item">
+            <a href="https://github.com/nikuxrix" target="_blank" rel="noopener noreferrer" class="link-card">
+              <span class="link-icon">
+                <img src="https://cdn.simpleicons.org/github" alt="GitHub" class="icon-invert" />
+              </span>
+              <div class="link-text">
+                <span class="link-title">GitHub</span>
+                <span class="link-desc">
+                  あんま使いません
+                  <br />
+                  （むずくて使えません）
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="link-item">
+            <a
+              href="https://marshmallow-qa.com/zals2lqwsm5r9ym"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link-card"
+            >
+              <span class="link-icon">
+                <img
+                  src="https://marshmallow-qa.com/assets/logo-56x56-5f4ae701181b9de72f819ed163a15a197e6dc8d8.png"
+                  alt="マシュマロ"
+                />
+              </span>
+              <div class="link-text">
+                <span class="link-title">マシュマロ</span>
+                <span class="link-desc">
+                  多分質問無いと思いますが
+                  <br />
+                  質問等はこちら
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="link-item">
+            <a href="https://note.com/nikuxrix/" target="_blank" rel="noopener noreferrer" class="link-card">
+              <span class="link-icon"><img src="https://cdn.simpleicons.org/note" alt="note" /></span>
+              <div class="link-text">
+                <span class="link-title">note</span>
+                <span class="link-desc">
+                  いい感じの文章が書けないので
+                  <br />
+                  最近は書いてません
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="link-item">
+            <a
+              href="https://discord.com/users/1362722245037916210"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="link-card"
+            >
+              <span class="link-icon"><img src="https://cdn.simpleicons.org/discord" alt="Discord" /></span>
+              <div class="link-text">
+                <span class="link-title">Discord</span>
+                <span class="link-desc">基本ここにいます</span>
+              </div>
+            </a>
+          </li>
+
+          <li class="link-item">
+            <a href="https://misskey.io/@nikuxRix" target="_blank" rel="noopener noreferrer" class="link-card">
+              <span class="link-icon"><img src="https://cdn.simpleicons.org/misskey" alt="Misskey.io" /></span>
+              <div class="link-text">
+                <span class="link-title">Misskey.io</span>
+                <span class="link-desc">
+                  あまり使いません
+                  <br />
+                  アカウント持ってるだけです
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="link-item">
+            <a href="https://misskey-square.net/@nikuxRix" target="_blank" rel="noopener noreferrer" class="link-card">
+              <span class="link-icon">
+                <img src="https://misskey-square.net/files/9d173e10-18a4-421f-9585-cce13d33299e" alt="Misskey Square" />
+              </span>
+              <div class="link-text">
+                <span class="link-title">Misskey Square</span>
+                <span class="link-desc">友達に作らされたアカウントです</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <footer class="profile-footer">
+        <p class="profile-bio">
+          <b>一言</b>
+          <br />
+          こんにちは
+          <br />
+          基本Discordにいます
+          <br />
+          よろしくお願いします。
+          <br />
+          あとこのアカウント画像はそろそろ変えます
+          <br />
+          （早く変えたいです）
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>
